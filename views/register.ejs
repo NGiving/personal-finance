@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tahoma">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Questrial">
+    <title>Sign Up</title>
+</head>
+<body id="register">
+    <!-- Navigation -->
+    <div class="container-fluid navbar-container align-items-center">
+        <nav class="navbar navbar-expand-xl bg-light d-flex">
+            <a href="/" class="navbar-brand me-auto p-2">Personal Finance</a>
+            <a href="/login" class="nav-link p-2">Sign In</a>
+        </nav>
+    </div>
+    <div class="container align-content-center login-register-container">
+        <div class="d-flex flex-row align-items-center">
+            <div class="login-register-header me-auto">Create an account</div>
+            <div class="login-register-switch p-2">
+                <span>or</span>
+            </div>
+            <a href="/login" class="login-register-switch-link">log in</a>
+        </div>
+        <form action="/register" method="POST">
+            <!-- <div class="form-group mb-3 mt-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username">
+            </div> -->
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" name="email" id="email">
+            </div>
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="text" class="form-control" name="password" id="password">
+            </div>
+            <div class="form-group mb-3">
+                <label for="password1" class="form-label">Confirm Password</label>
+                <input type="text" class="form-control" name="password1" id="password1">
+            </div>
+            <button class="login-btn btn btn-primary">
+                <span>Create an account</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- JS and Popper bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</body>
+</html>

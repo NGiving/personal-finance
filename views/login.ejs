@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tahoma">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Questrial">
+    <title>Sign In</title>
+</head>
+<body id="login">
+    <!-- Navigation -->
+    <div class="container-fluid navbar-container align-items-center">
+        <nav class="navbar navbar-expand-xl bg-light d-flex">
+            <a href="/" class="navbar-brand me-auto p-2">Personal Finance</a>
+            <a href="/register" class="nav-link p-2">Sign Up</a>
+        </nav>
+    </div>
+    <div class="container align-content-center login-register-container">
+        <div class="d-flex flex-row align-items-center">
+            <div class="login-register-header me-auto">Sign in</div>
+            <div class="login-register-switch p-2">
+                <span>or</span>
+            </div>
+            <a href="/register" class="login-register-switch-link">create an account</a>
+        </div>
+        <form action="/login" method="POST">
+            <!-- <div class="form-group mb-3 mt-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username">
+            </div> -->
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" name="email" id="email">
+            </div>
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="text" class="form-control" name="password" id="password">
+            </div>
+            <button class="login-btn btn btn-primary">
+                <span>Sign in</span>
+            </button>
+        </form>
+    </div>
+</body>
+</html>

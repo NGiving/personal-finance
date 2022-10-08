@@ -1,0 +1,95 @@
+.navbar-container, nav.navbar, .container-fluid {
+    padding: 0;
+    margin: 0;
+}
+
+.bg {
+    background:linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.80)), url('../img/background.png') no-repeat;
+    background-size: 100%;
+    background-blend-mode: darken;
+    /* background-color: #0e2238; */
+}
+
+.nav-link {
+    font-family: 'Questrial', serif;
+    font-size: 20px;
+}
+
+.nav-link:hover {
+    background-color: #D3D3D3;
+}
+
+.navbar-brand {
+    text-decoration: none;
+    font-family: 'Questrial', serif;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+body#home {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Questrial', serif;
+    font-size: 16px;
+    font-weight: normal;
+    color: whitesmoke;
+}
+
+#home .header-container {
+    margin-top: 20vh;
+}
+
+#home .navbar-container {
+    position: absolute;
+    top: 0;
+    font-size: 20px;
+    color: black;
+}
+
+#home .main-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+#home h2 {
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+#home .btn-container {
+   margin-top: 5%;;
+}
+
+#home .footer-container {
+    position: absolute;
+    bottom: 0;
+    background-color: black;
+}
+
+body#register, body#login {
+    font-family: "Tahoma", serif;
+    font-weight: normal;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-register-header {
+    font-size: 18px;
+}
+
+.login-register-switch-link {
+    text-decoration: none;
+}
+
+.login-register-container {
+    margin-top: 5%;
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
+.login-btn {
+    width: 100%;
+}
