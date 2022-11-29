@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet"> 
+  <link rel="icon" href="/img/icon.png">
+  <title>Budgets - Personal Finance</title>
+</head>
+
+<body class="h-screen bg-gray-100 overflow-hidden">
+  <div class="h-full">
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <!-- Sidebar  -->
+    <%- include('../partials/sidebar.ejs') %>
+
+    <!-- Page Content -->
+    <main class="h-screen overflow-y-auto pl-64">
+      <div class="pt-16 pb-16">
+          <div class="flex-1 p-8 flex flex-col">
+              <div class="flex items-center justify-between">
+                  <h3 class="font-poppins font-bold text-2xl text-black text-left px-2">Budget</h3>
+                  <a href="/user/budgets/create" class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-custom-purple-600 hover:bg-custom-purple-700 focus:ring-custom-purple-500 ml-4" role="button">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 -ml-1 mr-2">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                      </svg> 
+                      Add Budget
+                  </a>
+              </div>
+              <div class="relative justify-end items-center h-5">
+                  <!---->
+              </div>
+              <% if (locals.budgets && budgets.length) { %> 
+                <div class="relative bg-white overflow-hidden rounded-lg shadow border-b border-gray-200 flex justify-evenly">
+                    <% budgets.forEach((bgt) => { %> 
+                        <div>
+                            <div class="flex justify-between font-poppins text-xl text-black"></div>
+                            <div><canvas></canvas></div>
+                        </div>
+                    <% }) %> 
+                </div>
+                <% } else { %>
+                    <div class="flex flex-col justify-center relative text-black w-full h-full overflow-hidden mt-24">
+                        <div class="flex flex-col justify-center flex-1 w-1/4 pt-8 mr-auto ml-auto shadow-[0_1px_2px_rgba(0,0,0,0.15)] transition-shadow ease-in-out duration-300 hover:shadow-[0_5px_15px_rgba(0,0,0,0.3)]">
+                            <div class="flex justify-center">
+                                <img class="shadow rounded" src="/img/budget-icon.png">
+                            </div>
+                            <span class="block font-poppins font-medium text-xl text-center py-8">Set limits and start saving!</span>
+                            <div class="flex justify-center align-middle py-8">
+                                <a href="/user/budgets/create" role="button" class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 h-8 w-54 text-sm leading-5 rounded-md border-transparent  border-solid border-custom-purple-500 transition ease-in-out duration-150 text-custom-purple-500 hover:bg-custom-purple-200 shadow-inner focus:ring-custom-purple-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 -ml-1 mr-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg> 
+                                    Add Budget
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+  </div>
+  <script>
+    // data block
+    const data = {
+        labels: {},
+        datasets: [{
+            
+        }]
+    }
+
+    // config block
+    const config = {
+        plugins: [doughtnutLabel, outLabel, customCanvasBackgroundColor],
+        type: 'bar',
+        data,
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}${Number(context.formattedValue).toFixed(2)}`
+                        }
+                    }
+                },
+                doughtnutLabel: {
+                    fontColor: 'black'
+                }
+            }
+        }
+    }
+
+    // render  block
+    const expenses = new Chart(
+        document.getElementById('expenses'),
+        config
+    )
+  </script>
+</body>
+
+</html>

@@ -7,41 +7,57 @@
     <link rel="stylesheet" type="text/css" href="/css/styles.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tahoma">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Questrial">
-    <title>Sign In</title>
+    <link rel="icon" href="/img/icon.png">
+    <title>Sign In - Personal Finance</title>
 </head>
-<body id="login">
-    <!-- Navigation -->
-    <div class="container-fluid navbar-container align-items-center">
-        <nav class="navbar navbar-expand-xl bg-light d-flex">
-            <a href="/" class="navbar-brand me-auto p-2">Personal Finance</a>
-            <a href="/register" class="nav-link p-2">Sign Up</a>
-        </nav>
-    </div>
-    <div class="container align-content-center login-register-container">
-        <div class="d-flex flex-row align-items-center">
-            <div class="login-register-header me-auto">Sign in</div>
-            <div class="login-register-switch p-2">
-                <span>or</span>
-            </div>
-            <a href="/register" class="login-register-switch-link">create an account</a>
+<body>
+    <div class="wrapper font-tahoma">
+        <!-- Navigation -->
+        <div class="container-fluid navbar-container align-items-center">
+            <nav class="navbar navbar-expand-xl bg-light d-flex">
+                <a href="/" class="navbar-brand navbar-brand--font me-auto p-2">Personal Finance</a>
+                <a href="/register" class="nav-link font-questrial p-2">Sign Up</a>
+            </nav>
         </div>
-        <form action="/login" method="POST">
-            <!-- <div class="form-group mb-3 mt-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" name="username" id="username">
-            </div> -->
-            <div class="form-group mb-3">
-                <label for="email" class="form-label">Email Address</label>
-                <input type="email" class="form-control" name="email" id="email">
+        <div class="container-fluid d-flex" style="flex: 1 1 auto;">
+            <div class="login-register-background col-6"></div>
+            <div class="d-flex col-6">
+                <div class="container login-register-container">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="login-register-header me-auto">Sign in</div>
+                        <div class="login-register-switch p-2">
+                            <span>or</span>
+                        </div>
+                        <a href="/register" class="login-register-switch-link">create an account</a>
+                    </div>
+                    <form action="/login" method="POST">
+                        <div class="form-group mb-3 mt-3">
+                            <div class="error-wrapper">
+                                <span class="error-message"><%= locals.errorMessage && errorMessage.some(error => error['param'] === 'email') ? errorMessage.find(error => error['param'] === 'email').msg : '' %></span>
+                            </div>
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="text" class="form-control" name="email" id="email" value="<%= locals.email ? email : '' %>">
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="error-wrapper">
+                                <span class="error-message"><%= locals.errorMessage && errorMessage.some(error => error['param'] === 'password') ? errorMessage.find(error => error['param'] === 'password').msg : '' %></span>
+                            </div>
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" id="password">
+                        </div>
+                        <button class="login-btn btn btn-primary" type="submit">
+                            <span>Sign in</span>
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div class="form-group mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="text" class="form-control" name="password" id="password">
-            </div>
-            <button class="login-btn btn btn-primary">
-                <span>Sign in</span>
-            </button>
-        </form>
+        </div>
     </div>
+    
+    <!-- JS and Popper bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" 
+            crossorigin="anonymous">
+    </script>
 </body>
 </html>

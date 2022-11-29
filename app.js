@@ -1,101 +1,45 @@
-const express = require('express')
 const path = require('path')
-const bodyParser = require('body-parser')
+const express = require('express')
+const flash = require('express-flash')
+const session = require('express-session')
+
+require('dotenv').config()
+
+// Initialization
 const app = express()
-const port = 3000
-const { body, checkSchema, validationResult } = require('express-validator')
-const registrationSchema = {
-    email: {
-        custom: {
-            options: value => {
-                return User.find({
-                    email: value
-                }).then(user => {
-                    if (user.length > 0) {
-                        return Promise.reject('Email address has been taken')
-                    }
-                })
-            }
-        }
-    },
-    password: {
-        isStrongPassword: {
-            minLength: 8,
-            minLowercase: 1,
-            minUppercase: 1,
-            minNumbers: 1
-        },
-        errorMessage: 'Password must have a minimum of 8 characters, contains at least 1 lowercase letter, 1 uppercase letter, and 1 numeric character'
-    }
-}
-const validate = validation => {
-    return async (req, res, next) => {
-        await Promise.all(validations.map(validation => validation.run(req)));
-    
-        const errors = validationResult(req);
-        if (errors.isEmpty()) {
-            return next();
-        }
-
-        res.status(400).json({
-            errors: errors.array()
-        })
-    }
-}
-
-// Static Files
-app.use(express.static('public'));
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(express.static('public'))
 app.use('/css', express.static(path.join(__dirname, 'public/css')))
 app.use('/img', express.static(path.join(__dirname, 'public/img')))
-app.use('/js', express.static(path.join(__dirname, 'public/js')))
-
-// Templating engine
 app.set('view engine', 'ejs')
+app.set('views', './views')
 
-const urlencodedParser = bodyParser.urlencoded({ extended: false})
+// MongoDB connection
+require('./config/database')
+
+// Passport initialization
+const mongoose = require('mongoose')
+const MongoStore = require('connect-mongo')
+const passport = require('passport')
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({ client: mongoose.connection.getClient() }),
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 3
+    }
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(flash())
+require('./config/passport')
+
+// Routes
+app.use('/', require('./routes/index.route'))
 
 // Listen to port 3000
+const port = process.env.PORT || 3000
 app.listen(port, () => console.log(`Listening to port: ${port}`))
-
-// Home Page
-app.get('/', (req, res) => {
-    res.render('home')
-});
-
-// Sign in Page
-app.get('/login', (req, res) => {
-    res.render('login')
-});
-
-// Sign Up Page
-app.get('/register', (req, res) => {
-    res.render('register')
-});
-
-// Login and Register validation
-app.post('/register', validate(checkSchema(registrationSchema)), (res, req) => {
-    // Save user
-    let username = req.body.username
-    let password = req.body.password
-
-    res.status(200).json({
-        success: true,
-        message: 'Registration successful'
-    });
-});
-
-app.post('/login', validate([
-    body('email').isEmail().normalizeEmail(),
-    body('password').isLength({
-        min: 8
-    })
-]),
-    (req, res) => {
-        // look up form in database
-
-        res.status(200).json({
-            success: true,
-            message: 'Login successful'
-        });
-    }
-);

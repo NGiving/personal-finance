@@ -1,79 +1,75 @@
-.navbar-container, nav.navbar, .container-fluid {
+.navbar-container, .navbar, .container-fluid {
     padding: 0;
     margin: 0;
 }
 
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0 auto;
+}
+
 .bg {
-    background:linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.80)), url('../img/background.png') no-repeat;
+    background:linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.80)), url('/img/background.png') no-repeat;
     background-size: 100%;
     background-blend-mode: darken;
     /* background-color: #0e2238; */
+    /* #6b5eae purple   #A1AE5E green */
 }
 
-.nav-link {
-    font-family: 'Questrial', serif;
+.navbar-container .nav-link {
     font-size: 20px;
 }
 
-.nav-link:hover {
+.navbar-container .nav-link:hover {
     background-color: #D3D3D3;
 }
 
-.navbar-brand {
+.navbar-brand--font {
     text-decoration: none;
-    font-family: 'Questrial', serif;
+    font-family: 'Questrial', sans-serif;
     font-weight: bold;
     font-size: 24px;
 }
 
-body#home {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    font-family: 'Questrial', serif;
-    font-size: 16px;
-    font-weight: normal;
-    color: whitesmoke;
+.font-questrial {
+    font-family: 'Questrial', sans-serif;
 }
 
-#home .header-container {
+.font-tahoma {
+    font-family: 'Tahoma', sans-serif;
+}
+
+.font-poppins {
+    font-family: 'Poppins', sans-serif;
+}
+
+.header-container {
     margin-top: 20vh;
 }
 
-#home .navbar-container {
-    position: absolute;
+.navbar-container {
     top: 0;
     font-size: 20px;
     color: black;
+    border-bottom: #737373 1px solid;
 }
 
-#home .main-content {
-    display: flex;
-    flex-direction: column;
+.main-content {
     flex-grow: 1;
 }
 
-#home h2 {
-    font-size: 40px;
-    font-weight: bolder;
-}
-
-#home .btn-container {
+.btn-container {
    margin-top: 5%;;
 }
 
-#home .footer-container {
+.footer-container {
     position: absolute;
     bottom: 0;
     background-color: black;
-}
-
-body#register, body#login {
-    font-family: "Tahoma", serif;
-    font-weight: normal;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 .login-register-header {
@@ -85,11 +81,109 @@ body#register, body#login {
 }
 
 .login-register-container {
-    margin-top: 5%;
-    padding-left: 25%;
-    padding-right: 25%;
+    position: absolute;
+    width: 370px;
+    top: 35%;
+    left: 75%;
+    transform: translate(-50%, -25%);
+}
+
+.login-register-background {
+    background: url('/img/login-register-background.png') no-repeat;
+    background-size: cover;
+    width: 50%;
+    height: 100%;
+    flex-flow: column;
+    flex: 1 1 auto;
+}
+
+.error-message-container {
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    height: 25%;
+}
+
+.alert-container {
+    margin: 3em auto 0;
+    width: 350px;
+    font-size: 14px;
+    font-weight: normal;
 }
 
 .login-btn {
     width: 100%;
+}
+
+.bg-white {
+    background: rgba(255, 255, 255, 1);
+}
+
+.navbar-container__menu {
+    width: 100%;
+    height: 4rem;
+    padding: 0.75rem 2rem 0.75rem 2rem;
+}
+
+.z-50 {
+    z-index: 50;
+}
+
+.content {
+    padding-left: 16rem;
+    overflow-y: auto;
+    height: 100vh;
+    min-height: 0px;
+}
+
+.content-container {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.sidebar .nav-link.is-active,
+.sidebar .nav-link:hover {
+    border-left: 4px solid rgba(88,81,216,1);
+    color: rgba(88,81,216,1);
+}
+
+.sidebar .nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: black;
+    border-left: 4px solid transparent;
+    padding: 12px 0 12px 24px;
+}
+
+.header-menu__button,
+.header-menu__button:focus,
+.header-menu__button:hover {
+    text-decoration: none;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    background-image: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.25rem;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+.error-message {
+    font-size: 12px;
+    color: #e82110;
+    display: block;
+}
+
+.error-wrapper {
+    color: #e82110;
+    font-size: 12px;
+    min-height: 18px;
+}
+
+.form-label {
+    color: #737373;
 }
