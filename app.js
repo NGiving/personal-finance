@@ -13,7 +13,7 @@ app.use(express.static('public'))
 app.use('/css', express.static(path.join(__dirname, 'public/css')))
 app.use('/img', express.static(path.join(__dirname, 'public/img')))
 app.set('view engine', 'ejs')
-app.set('views', './views')
+app.set('views', path.join(__dirname, '/views'))
 
 // MongoDB connection
 require('./config/database')
