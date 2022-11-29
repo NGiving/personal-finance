@@ -24,12 +24,13 @@ router.get('/invoices', UserController.checkAuthenticated, (req, res) => {
 
 router.get('/budgets', UserController.checkAuthenticated, async (req, res) => {
     const budgets = await UserController.getUserMonthlyBudgets(req.user._id, 'current')
-    console.log(budgets)
+    const expenses = await UserController.getUserMonthlyExpenses(req.user._id, 'current')
 
     res.render('users/budgets', {
         page_name: 'budgets',
         user: req.user,
-        budgets: budgets
+        budgets: budgets,
+        expenses: expenses
     })
 });
 

@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet"> 
   <link rel="icon" href="/img/icon.png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
   <title>Budgets - Personal Finance</title>
 </head>
 
@@ -38,11 +40,17 @@
                   <!---->
               </div>
               <% if (locals.budgets && budgets.length) { %> 
-                <div class="relative bg-white overflow-hidden rounded-lg shadow border-b border-gray-200 flex justify-evenly">
-                    <% budgets.forEach((bgt) => { %> 
-                        <div>
-                            <div class="flex justify-between font-poppins text-xl text-black"></div>
-                            <div><canvas></canvas></div>
+                <div class="relative bg-white overflow-hidden rounded-lg shadow border-b border-gray-200 flex flex-col justify-evenly">
+                    <% budgets.forEach((budget, i) => { %> 
+                        <div class="flex flex-col w-full px-6 py-4 mt-4">
+                            <div class="flex justify-between px-2">
+                                <span class="font-poppins"><%= budget.category %></span>
+                                <span class="font-poppins"><%= %></span>
+                            </div>
+                            <div class="relative mt-4 mr-auto ml-auto w-[1550px] h-[30px]"><canvas id="<%= `budget${i}` %>"></canvas></div>
+                            <div class="font-poppins text-gray-800 font-sm px-2"><%= `\$${locals.expenses ? expenses[budget.category] || '0.00' : '0.00'}` %>
+                                <span class="text-gray-400"> of <%= Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(`${budget.amount.dollar}.${budget.amount.cent}`) %></span>
+                            </div>
                         </div>
                     <% }) %> 
                 </div>
@@ -68,44 +76,83 @@
         </div>
   </div>
   <script>
-    // data block
-    const data = {
-        labels: {},
-        datasets: [{
-            
-        }]
-    }
+    let budgetCharts = []
+    const progressBar = {
+        id: 'progressBar',
+        beforeDatasetDraw: (chart, args, options) => {
+            const { ctx, chartArea: {top, bottom, left, right, width, height}, scales: {x, y} } = chart
+            ctx.save()
 
-    // config block
-    const config = {
-        plugins: [doughtnutLabel, outLabel, customCanvasBackgroundColor],
-        type: 'bar',
-        data,
-        options: {
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `${context.dataset.label}${Number(context.formattedValue).toFixed(2)}`
-                        }
-                    }
-                },
-                doughtnutLabel: {
-                    fontColor: 'black'
-                }
-            }
+            data.datasets[0].data.forEach((datapoint, index) =>  {
+                ctx.beginPath()
+                ctx.fillStyle = '#d4d6d5'
+                console.log(barHeight)
+                ctx.fillRect(left, y.getPixelForValue(index) - height/2, width, height)
+            })
         }
     }
 
-    // render  block
-    const expenses = new Chart(
-        document.getElementById('expenses'),
-        config
-    )
-  </script>
+        <% if (locals.budgets) { %>
+		    <% budgets.forEach((budget, i) => { %>
+                budgetCharts.push(new Chart(document.getElementById(`budget${<%= i %>}`), {
+                    type: 'bar',
+                    data: {
+                        labels: <%- JSON.stringify(Array.of(budget.category)) %>,
+                        datasets: [{
+                            label: 'Amount Spent',
+                            data: <%- JSON.stringify(Array.of(locals.expenses ? expenses[budget.category] || 0 : 0)) %>,
+                            backgroundColor: ['#00cfaa'],
+                            borderColor: ['#00cfaa'],
+                            borderWidth: 0,
+                            borderSkipped: false,
+                            borderRadius: 5,
+                            barPercentage: 1,
+                            categoryPercentage: 1
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        events: [],
+						indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        },
+						scales: {
+                            x: {
+                                min: 0,
+                                max: <%- JSON.stringify(parseFloat(`${budget.amount.dollar}.${budget.amount.cent}`)) %>,
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    display: false
+                                }
+                            }
+						}
+                    }
+                }))
+		    <% }) %>
+	    <% } %>
+    </script>
 </body>
 
 </html>

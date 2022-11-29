@@ -40,9 +40,12 @@ async function getUserMonthlyExpenses(userId, otp) {
     const month = otp === 'previous' ? (new Date().getMonth()+13)%12 : new Date().getMonth()
     const expenses = await getUserExpenses(userId)
     expenses.filter(exp => new Date(exp.date).getMonth() === month).forEach(exp => {
-        if (exp.category in data) data[exp.category] += parseFloat(`${exp.amount.dollar}.${exp.amount.cent}`).toFixed(2)
-        else data[exp.category] = parseFloat(`${exp.amount.dollar}.${exp.amount.cent}`).toFixed(2)
+        if (exp.category in data) data[exp.category] += exp.amount.dollar*100 + exp.amount.cent
+        else data[exp.category] = exp.amount.dollar*100 + exp.amount.cent
     })
+    for (const [k, v] of Object.entries(data)) {
+        data[k] = `${String(v).slice(0, -2)}.${String(v).slice(-2)}`
+    }
     return data
 }
 
