@@ -38,7 +38,10 @@ app.use(flash())
 require('./config/passport')
 
 // Routes
-app.use('/', require('./routes/index.route'))
+const { checkAuthenticated } = require('./services/utils')
+app.all('*', checkAuthenticated)
+app.use('/', require('./routes/index'))
+app.use('/user', require('./routes/user'))
 
 // Listen to port 3000
 const port = process.env.PORT || 3000

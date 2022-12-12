@@ -34,28 +34,28 @@
                     <form action="/register" method="POST">
                         <div class="form-group mb-3 mt-3">
                             <div class="error-wrapper">
-                                <span class="error-message"><%= locals.errorMessage && errorMessage.some(error => error['param'] === 'username') ? errorMessage.find(error => error['param'] === 'username').msg : '' %></span>
+                                <span class="error-message"><%= locals.errorMessage?.find(error => error['param'] === 'username')?.msg ?? '' %></span>
                             </div>
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" name="username" id="username" value="<%= locals.username ? username : '' %>">
+                            <input type="text" class="form-control" name="username" id="username" value="<%= locals.username ?? '' %>">
                         </div>
                         <div class="form-group mb-3">
                             <div class="error-wrapper">
-                                <span class="error-message"><%= locals.errorMessage && errorMessage.some(error => error['param'] === 'email') ? errorMessage.find(error => error['param'] === 'email').msg : '' %></span>
+                                <span class="error-message"><%= locals.errorMessage?.find(error => error['param'] === 'email')?.msg ?? '' %></span>
                             </div>
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" name="email" id="email" value="<%= locals.email ? email : '' %>">
+                            <input type="email" class="form-control" name="email" id="email" value="<%= locals.email ?? '' %>">
                         </div>
                         <div class="form-group mb-3">
                             <div class="error-wrapper">
-                                <span class="error-message"><%= locals.errorMessage && errorMessage.some(error => error['param'] === 'password') ? errorMessage.find(error => error['param'] === 'password').msg : '' %></span>
+                                <span class="error-message"><%= locals.errorMessage?.find(error => error['param'] === 'password')?.msg ?? '' %></span>
                             </div>
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" name="password" id="password">
                         </div>
                         <div class="form-group mb-3">
                             <div class="error-wrapper">
-                                <span class="error-message"><%= locals.errorMessage && errorMessage.some(error => error['param'] === 'password2') ? errorMessage.find(error => error['param'] === 'password2').msg : '' %></span>
+                                <span class="error-message"><%= locals.errorMessage?.find(error => error['param'] === 'password2')?.msg ?? '' %></span>
                             </div>
                             <label for="password2" class="form-label">Confirm Password</label>
                             <input type="password" class="form-control" name="password2" id="password2">

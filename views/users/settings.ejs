@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/css/output.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet"> 
+  <link rel="icon" href="/img/icon.png">
+  <title>Settings - Personal Finance</title>
+</head>
+
+<body class="h-screen overflow-hidden bg-gray-100">
+  <div class="h-full">
+    <!-- Header -->
+    <%- include('../partials/header.ejs') %>
+
+    <!-- Sidebar  -->
+    <%- include('../partials/sidebar.ejs') %>
+
+    <!-- Page Content -->
+    <main class="h-screen overflow-y-auto pl-64">
+        <div class="pt-16 pb-16">
+            <div class="flex flex-col flex-1 p-8">
+                <div class="flex items-center justify-start">
+                    <h3 class="font-poppins font-bold text-2xl text-black text-left px-2">Settings</h3>
+                </div>
+                <div class="relative justify-end items-center h-5">
+                    <!---->
+                </div>
+                <div class="rounded-lg bg-white relative shadow">
+                    <div id="accountForm" action="/user/settings" method="" class="p-8">
+                        <div class="grid gap-y-6 grid-cols-2" style="column-gap: 2rem;">
+                            <div class="relative w-full text-left">
+                                <label for="username" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
+                                    <div>Username</div>
+                                </label>
+                                <input type="text" name="username" id="username" autocomplete="off" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500" value="<%= locals.username ?? '' %>">
+                                <span id="username-error" class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage?.find(err => err['param'] === 'username')?.msg ?? '' %></span>
+                            </div>
+                            <div class="relative w-full text-left">
+                                <label for="email" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
+                                    <div>Email</div>
+                                </label>
+                                <input type="email" name="email" id="email" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500" value="<%= locals.email ?? '' %>">
+                                <span id="email-error" class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage?.find(err => err['param'] === 'email')?.msg ?? ''%></span>
+                            </div>
+                            <div class="relative w-full text-left">
+                                <label for="password" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
+                                    <div>Password</div>
+                                </label>
+                                <input type="password" name="password" id="password" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500" value="<%= locals.password ?? '' %>">
+                                <span id="password-error" class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage?.find(err => err['param'] === 'password')?.msg ?? '' %></span>
+                            </div>
+                            <div class="relative w-full text-left">
+                                <label for="confirmPassword" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
+                                    <div>Confirm Password</div>
+                                </label>
+                                <input type="password" name="confirmPassword" id="confirmPassword" disabled class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500">
+                                <span id="confirm-password-error" class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage?.find(err => err['param'] === 'confirmPassword')?.msg ?? '' %></span>
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <button type="submit" id="save-btn" disabled class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-custom-purple-600 hover:bg-custom-purple-700 focus:ring-custom-purple-500">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+  </div>
+  <script src="/js/settings.js" defer></script>
+</body>
+
+</html>

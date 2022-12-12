@@ -2,12 +2,10 @@ const mongoose = require('mongoose')
 
 const ExpenseSchema = new mongoose.Schema({
     category: String,
-    amount: {
-        dollar: { type: Number, default: 0 },
-        cent: { type: Number, default: 0, max: 100 },
-    },
+    amount: Number,
     date: Date,
-    description: String
+    description: String,
+    deleted: { type: Boolean, default: false }
 })
 
 const Expense = mongoose.model('Expense', ExpenseSchema)

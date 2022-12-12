@@ -1,0 +1,78 @@
+<script>
+    let budgetCharts = []
+    const progressBar = {
+        id: 'progressBar',
+        beforeDatasetDraw: (chart, args, options) => {
+            const { ctx, chartArea: {top, bottom, left, right, width, height}, scales: {x, y} } = chart
+            ctx.save()
+
+            data.datasets[0].data.forEach((datapoint, index) =>  {
+                ctx.beginPath()
+                ctx.fillStyle = '#d4d6d5'
+                console.log(barHeight)
+                ctx.fillRect(left, y.getPixelForValue(index) - height/2, width, height)
+            })
+        }
+    }
+
+        <% if (locals.budgets) { %>
+		    <% budgets.forEach((budget, i) => { %>
+                budgetCharts.push(new Chart(document.getElementById(`budget${<%= i %>}`), {
+                    type: 'bar',
+                    data: {
+                        labels: <%- JSON.stringify(Array.of(budget.category)) %>,
+                        datasets: [{
+                            label: 'Amount Spent',
+                            data: <%- JSON.stringify(Array.of(locals.expenses[budget.category] ?? 0)) %>,
+                            backgroundColor: ['#00cfaa'],
+                            borderColor: ['#00cfaa'],
+                            borderWidth: 0,
+                            borderSkipped: false,
+                            borderRadius: 5,
+                            barPercentage: 1,
+                            categoryPercentage: 1
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        events: [],
+						indexAxis: 'y',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        },
+						scales: {
+                            x: {
+                                min: 0,
+                                max: <%- JSON.stringify(parseFloat(`${budget.amount/100}.${budget.amount%100}`)) %>,
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    display: false
+                                }
+                            }
+						}
+                    }
+                }))
+		    <% }) %>
+	    <% } %>
+    </script>

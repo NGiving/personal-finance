@@ -3,16 +3,8 @@
     <div class="flex">
         <ul class="flex h-8 m-0 list-none">
             <li>
-                <form class="px-4 flex flex-row" role="search">
-                    <input class="font-poppins text-sm font-medium text-gray-900 w-72 h-8 rounded" type="search" placeholder="Search...">
-                    <div class="flex align-middle font-poppins text-sm font-medium h-8 ml-4 rounded border-black border-solid text-center bg-white bg-opacity-20">
-                        <button type="submit" class="text-white font-medium rounded-lg text-sm px-2">Search</button>
-                    </div>
-                </form>
-            </li>
-            <li>
                 <div class="dropdown relative inline-block">
-                    <button onclick="dropdownToggle()" class="dropdown-btn text-white font-medium rounded-lg text-sm text-center inline-flex items-center" type="button">
+                    <button id="dropdown-btn" class="dropdown-btn text-white font-medium rounded-lg text-sm text-center inline-flex items-center" type="button">
                         <img class="w-8 h-8 bg-[#d1d851] bg-opacity-75 border-black border-solid rounded" src="/img/default-profile.png" alt="Profile">
                     </button>
     
@@ -24,7 +16,7 @@
                         </div>
                         <ul class="text-sm text-gray-700">
                             <li>
-                                <a href="#" class="inline-flex w-full py-1 px-4 hover:bg-gray-100">
+                                <a href="/user/settings" class="inline-flex w-full py-1 px-4 hover:bg-gray-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 mr-2 text-gray-700 group-hover:text-gray-500">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -33,7 +25,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/logout" class="inline-flex w-full py-1 px-4 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="/user/logout" class="inline-flex w-full py-1 px-4 text-sm text-gray-700 hover:bg-gray-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 mr-2 text-gray-700 group-hover:text-gray-500">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                     </svg>
@@ -47,8 +39,18 @@
         </ul>
     </div>
         <script>
-            function dropdownToggle() {
-                document.getElementById('dropdown-menu').classList.toggle('hidden')
-            }
+            const dropdownBtn = document.getElementById('dropdown-btn')
+            const dropdownMenu = document.getElementById('dropdown-menu')
+
+            dropdownBtn.addEventListener('click', function(e) {
+                dropdownMenu.classList.toggle('hidden')
+                e.stopPropagation()
+            })
+
+            window.addEventListener('click', function(e) {
+                if (!e.target.matches('.dropdown-btn') && !dropdownMenu.classList.contains('hidden')) {
+                    dropdownMenu.classList.add('hidden')
+                }
+            })
         </script>
 </header>

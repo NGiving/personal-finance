@@ -38,37 +38,46 @@
                     <div class="relative justify-end items-center h-5">
                         <!---->
                     </div>
-                    <% if (locals.expenses && expenses.length) { %> 
-                    <div class="relative bg-white overflow-hidden rounded-lg shadow border-b border-gray-200 flex justify-evenly">
-                        <table class="divide-y divide-gray-200 min-w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 font-poppins uppercase tracking-wider cursor-pointer whitespace-nowrap">Date</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 font-poppins uppercase tracking-wider cursor-pointer whitespace-nowrap">Category</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 font-poppins uppercase tracking-wider cursor-pointer whitespace-nowrap">Description</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 font-poppins uppercase tracking-wider cursor-pointer whitespace-nowrap">Amount</th>
-                                    <th scope="col" class="w-8"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% expenses.forEach((exp) => { %> 
-                                <tr>
-                                    <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= new Intl.DateTimeFormat('en-CA').format(exp.date) %></td>
-                                    <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= exp.category %></td>
-                                    <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= exp.description || '-' %></td>
-                                    <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= `\$${new Intl.NumberFormat().format(exp.amount.dollar)}.${String(exp.amount.cent).padStart(2, '0')}`%></td>
-                                    <td class="px-6 py-4 text-right font-medium text-gray-500 whitespace-nowrap text-sm">
-                                        <button type="button" class="focus:outline-none">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 text-gray-500">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <% }) %> 
-                            </tbody>
-                        </table>
-                    </div>
+                    <% if (locals.expenses?.length) { %>
+                        <div class="relative">
+                            <div class="bg-white overflow-y-auto rounded-lg shadow border-b border-gray-200 flex justify-evenly">
+                                <table class="divide-y divide-gray-200 min-w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 font-poppins uppercase tracking-wider cursor-pointer whitespace-nowrap">Date</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 font-poppins uppercase tracking-wider cursor-pointer whitespace-nowrap">Category</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 font-poppins uppercase tracking-wider cursor-pointer whitespace-nowrap">Description</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 font-poppins uppercase tracking-wider cursor-pointer whitespace-nowrap">Amount</th>
+                                            <th scope="col" class="w-8"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% expenses.forEach((exp, n) => { %>
+                                        <tr>
+                                            <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= Intl.DateTimeFormat('en-CA').format(exp.date) %></td>
+                                            <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= exp.category %></td>
+                                            <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= exp.description || '-' %></td>
+                                            <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(`${exp.amount/100}.${exp.amount%100}`) %></td>
+                                            <td class="px-6 py-4 text-right font-medium text-gray-500 whitespace-nowrap text-sm">
+                                                <button type="button" id="<%= `expense-dropdown-btn-${n}` %>" data-id="<%= exp.id %>" class="focus:outline-none expense-btn">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 text-gray-500 pointer-events-none">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                                                    </svg>
+                                                </button>
+                                                <!-- Dropdown Menu -->
+                                                <div id="<%= `expense-dropdown-menu-${n}` %>" class="absolute hidden z-10 w-32 left-auto right-0 divide-y divide-gray-400 bg-white rounded-lg shadow expense-dropdown">
+                                                    <ul class="py-1 text-sm text-center list-none">
+                                                        <li><a href="<%= `/user/expenses/edit/${exp.id}` %> " role="button" data-id="<%= exp.id %>" class="block font-poppins w-full text-gray-800 py-2 px-4 hover:bg-gray-200 edit-btn">Edit</a></li>
+                                                        <li><button type="button" data-id="<%= exp.id %>" class="font-poppins w-full text-gray-800 py-2 px-4 hover:bg-gray-200 delete-btn">Delete</button></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <% }) %> 
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     <% } else { %>
                         <div class="relative text-black w-full h-full overflow-hidden mt-32">
                             <div class="font-poppins font-medium text-7xl px-8 text-center">(´。＿。｀)</div>
@@ -86,7 +95,16 @@
                 </div>
             </div>
         </main>
+        <div id="overlay" class="hidden fixed w-full h-full z-15 top-16 left-64 bg-white opacity-50 blur-lg"></div>
+        <section id="delete-modal" class="absolute hidden flex-col z-20 top-[44%] left-[57.5%] -translate-x-1/2 -translate-y-1/2 justify-center items-center bg-white border border-solid border-gray-300 rounded-2xl w-1/4 h-[200px] p-4 shadow">
+            <div class="font-poppins text-lg text-gray-600 mt-8">Are you sure you want to delete this expense?</div>
+            <div class="flex flex-row justify-around p-2 mt-5">
+                <button id="delete-continue-btn" type="button" class="rounded-lg inline-flex font-poppins text-sm font-medium text-white bg-red-600 items-center text-center px-5 py-2.5 mr-6 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300">Yes, I'm sure</button>
+                <button id="delete-cancel-btn" type="button" class="rounded-lg inline-flex font-poppins text-sm font-medium text-gray-500 bg-white items-center text-center px-5 py-2.5 border border-gray-200 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-200 ">Cancel</button>
+            </div>
+        </section>
 	</div>
+    <script src="/js/expenses.js" defer></script>
 </body>
 
 </html>

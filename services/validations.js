@@ -1,7 +1,7 @@
-const { check, validationResult } = require('express-validator')
+const { check, body } = require('express-validator')
 const db = require('../models')
 
-const registerValidation = [
+module.exports.register = [
     check('username')
     .exists({ checkFalsy: true })
     .withMessage('Please enter a username')
@@ -48,7 +48,7 @@ const registerValidation = [
     .withMessage('Passwords do not match')
 ]
     
-const loginValidation = [
+module.exports.login = [
     check('email')
     .exists({ checkFalsy: true })
     .withMessage('Please enter an email')
@@ -61,7 +61,7 @@ const loginValidation = [
     .withMessage('Please enter a password')
 ]
 
-const expenseValidation = [
+module.exports.expense = [
     check('category')
     .exists({ checkFalsy: true })
     .withMessage('Field is required'),
@@ -78,22 +78,23 @@ const expenseValidation = [
     .withMessage('Field is required')
     .bail()
     .custom((value, { req }) => {
-        return /(^\d+\.\d+$)|(\d+)|(^\d*\.\d+$)|(^\d+\.\d*$)/.test(value.replace('$', '').replace(',', ''))
+        return /(^\d+\.\d+$)|(\d+)|(^\d*\.\d+$)|(^\d+\.\d*$)/.test(value.replace('$', '').replaceAll(',', ''))
     })
     .withMessage('Please enter a valid numerical value')
     .isCurrency()
     .withMessage('Invalid input')
 ]
 
-const budgetValidation = [
+module.exports.budget = [
     check('category')
     .exists({ checkFalsy: true })
     .withMessage('Field is required')
     .custom((value, { req }) => {
         return new Promise((resolve, reject) => {
             db.User.findById(req.user._id, (err, user) => {
+                const month = new Date().getMonth()
                 if (err) reject(err)
-                if (user.budgets.some(budget => budget.category === value)) reject('A budget of this category already exists')
+                if (user.budgets.some(budget => budget.createdAt.getMonth() === month && budget.category === value)) reject('A budget of this category already exists')
                 resolve(true)
             })
         })
@@ -111,9 +112,57 @@ const budgetValidation = [
     .withMessage('Invalid input')
 ]
 
-module.exports = {
-    loginValidation,
-    registerValidation,
-    expenseValidation,
-    budgetValidation
-}
+module.exports.settings = [
+    check('username')
+    .if((value, { req }) => req.body.username)
+    .trim()
+    .isLength({ min: 5 })
+    .withMessage('Username must be a minimum 5 characters'),
+
+    check('email')
+    .if((value, { req }) => req.body.email)
+    .isEmail()
+    .withMessage('Please enter a valid email')
+    .bail()
+    .normalizeEmail()
+    .custom((value, { req }) => {
+        return new Promise((resolve, reject) => {
+            db.User.findOne({ email: req.body.email }, (err, user) => {
+                if (err) reject(err)
+                if (user) reject('The user with this email already exists')
+                resolve(true) 
+            })
+
+        })
+    }),
+
+    check('password')
+    .if(body('password').notEmpty())
+    .isLength({ min: 8 })
+    .withMessage('Password must be a minimum of 8 characters')
+    .bail()
+    .matches(/\d/)
+    .withMessage('Password must contain at least one numeric character')
+    .bail()
+    .matches(/[!@#$%^&*(),.?":{}|<>]/)
+    .withMessage('Password should contain at least one special character')
+    .bail()
+    .custom((value, { req }) => {
+        return new Promise((resolve, reject) => {
+            db.User.findById(req.user._id, async (err, user) => {
+                const match = await user.comparePassword(value)
+                if (err) reject(err)
+                if (match) reject('Password is already in use')
+                resolve(true)
+            })
+        })
+    }),
+
+    check('confirmPassword')
+    .if(body('password').notEmpty())
+    .exists({ checkFalsy: true })
+    .withMessage('Please retype your password')
+    .bail()
+    .custom((value, { req }) => value === req.body.password)
+    .withMessage('Passwords do not match')
+]

@@ -27,7 +27,7 @@
                     <div class="flex item-center justify-between">
                         <h3 class="font-poppins font-bold text-2xl text-black text-left px-2">New Expense</h3>
                         <div class="relative inline-flex">
-                            <a href="/user/expenses" class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-custom-purple-600 hover:bg-custom-purple-700 focus:ring-custom-purple-500 ml-4 mr-2" type="submit">
+                            <a href="/user/expenses" class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-custom-purple-600 hover:bg-custom-purple-700 focus:ring-custom-purple-500 ml-4 mr-2">
                                 Cancel
                             </a>
                             <button type="submit" form="expenseForm" action="/user/expenses/create" class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-custom-purple-600 hover:bg-custom-purple-700 focus:ring-custom-purple-500 ml-2">
@@ -70,7 +70,7 @@
                                         <option <% if (locals.category && category === 'Education') { %>selected<% } %> value="Education">Education</option>
                                         <option <% if (locals.category && category === 'Miscellaneous') { %>selected<% } %> value="Miscellaneous">Miscellaneous</option>
                                     </select>
-                                    <span class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage && errorMessage.some(err => err['param'] === 'category') ? errorMessage.find(err => err['param'] === 'category').msg : ''%></span>
+                                    <span class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage?.find(err => err['param'] === 'category')?.msg ?? ''%></span>
                                 </div>
                                 <div class="relative w-full text-left">
                                     <label for="date" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
@@ -79,7 +79,7 @@
                                             <span class="text-sm text-red-600">*</span>
                                         </div>
                                     </label>
-                                    <input type="date" name="date" id="date" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500" value="<%= locals.date ? date : null%>">
+                                    <input type="date" name="date" id="date" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500" value="<%= locals.date ?? null %>">
                                 </div>
                                 <div class="relative w-full text-left">
                                     <label for="amount" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
@@ -88,8 +88,8 @@
                                             <span class="text-sm text-red-600">*</span>
                                         </div>
                                     </label>
-                                    <input type="text" inputmode="numeric" name="amount" id="amount" placeholder="$0.00" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500" value="<%= locals.amount ? amount : ''%>">
-                                    <span class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage && errorMessage.some(err => err['param'] === 'amount') ? errorMessage.find(err => err['param'] === 'amount').msg : ''%></span>
+                                    <input type="text" inputmode="numeric" name="amount" id="amount" placeholder="$0.00" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500" value="<%= locals.amount ?? '' %>">
+                                    <span class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage?.find(err => err['param'] === 'amount')?.msg ?? '' %></span>
                                 </div>
                                 <div class="relative w-full text-left">
                                     <label for="description" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
@@ -97,7 +97,7 @@
                                             Description
                                         </div>
                                     </label>
-                                    <textarea type="text" name="description" id="description" class="rounded-md shadow w-full outline-none bg-white box-border border-0 h-16 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500"><%= locals.description ? description : ''%></textarea>
+                                    <textarea type="text" name="description" id="description" class="rounded-md shadow w-full outline-none bg-white box-border border-0 h-16 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500"><%= locals.description ?? '' %></textarea>
                                 </div>
                             </div>
                         </form>

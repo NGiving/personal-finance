@@ -1,18 +1,20 @@
 const db = require('../models')
+const mongoose = require('mongoose')
 
 function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
+    const nonSecurePaths = ['/', '/login', '/register']
+    if (nonSecurePaths.includes(req.path) && req.isAuthenticated()) {
+        return res.redirect('/user/dashboard')
+    } else if (!nonSecurePaths.includes(req.path) && !req.isAuthenticated()) {
+        res.status(401)
+        res.redirect('/login')
+    } else {
         return next()
     }
-    res.status(401)
-    res.redirect('/login')
 }
 
-function checkNotAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return res.redirect('/user/dashboard')
-    }
-    next()
+async function updateUserSettings(userId, args) {
+    return db.User.findByIdAndUpdate(userId, args)
 }
 
 async function createExpense(userId, expense) {
@@ -30,7 +32,7 @@ async function getUserWithPopulateField(userId, fieldname) {
 }
 
 async function getUserExpenses(userId) {
-    return (await getUserWithPopulateField(userId, 'expenses')).expenses.sort((a, b) => a.date - b.date).reverse()
+    return (await getUserWithPopulateField(userId, 'expenses')).expenses.filter(exp => !exp.deleted).sort((a, b) => a.date - b.date).reverse()
 }
 
 async function getUserMonthlyExpenses(userId, otp) {
@@ -40,13 +42,17 @@ async function getUserMonthlyExpenses(userId, otp) {
     const month = otp === 'previous' ? (new Date().getMonth()+13)%12 : new Date().getMonth()
     const expenses = await getUserExpenses(userId)
     expenses.filter(exp => new Date(exp.date).getMonth() === month).forEach(exp => {
-        if (exp.category in data) data[exp.category] += exp.amount.dollar*100 + exp.amount.cent
-        else data[exp.category] = exp.amount.dollar*100 + exp.amount.cent
+        if (exp.category in data) data[exp.category] += exp.amount
+        else data[exp.category] = exp.amount
     })
     for (const [k, v] of Object.entries(data)) {
         data[k] = `${String(v).slice(0, -2)}.${String(v).slice(-2)}`
     }
     return data
+}
+
+async function deleteUserExpense(expenseId) {
+    return db.Expense.findByIdAndUpdate(expenseId, { deleted: true })
 }
 
 async function createBudget(userId, budget) {
@@ -55,10 +61,7 @@ async function createBudget(userId, budget) {
             $push: {
                 budgets: {
                     category: budget.category,
-                    amount: { 
-                        dollar: budget.amount.dollar, 
-                        cent: budget.amount.cent 
-                    },
+                    amount: budget.amount,
                     createdAt: new Date()
                 }
             }
@@ -75,11 +78,12 @@ async function getUserMonthlyBudgets(userId, otp) {
 
 module.exports = {
     checkAuthenticated,
-    checkNotAuthenticated,
-    createExpense,
+    updateUserSettings,
     getUserWithPopulateField,
     getUserExpenses,
     getUserMonthlyExpenses,
+    createExpense,
+    deleteUserExpense,
     createBudget,
     getUserMonthlyBudgets
 }

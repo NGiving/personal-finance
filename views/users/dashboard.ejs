@@ -33,18 +33,18 @@
 							<div class="flex mt-1 mb-4 justify-between">
 								<h3 class="font-poppins text-black font-medium text-2xl h-10">Monthly Expenses</h3>
 								<div class="dropdown inline-block relative ml-auto border cursor-pointer border-gray-200 justify-center items-center rounded py-2 w-40 max-h-10">
-									<button onclick="expenseDropdownToggle()" id="expenseDropdown" type="button" class="text-black rounded inline-flex w-full justify-between px-3 dropdown-btn">
+									<button id="expense-dropdown-btn" type="button" class="text-black rounded inline-flex w-full justify-between px-3 dropdown-btn">
 										<span class="text-sm text-black font-poppins w-16 h-5 mr-2 whitespace-nowrap">This Month</span>
 										<svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
 										</svg>	
 									</button>
 									<!-- Dropdown menu -->
-									<div id="expense-dropdown__menu" class="absolute hidden top-10 left-auto right-0 m-0 z-10 w-40 bg-white rounded-lg divide-y divide-gray-400 shadow">
+									<div id="expense-dropdown-menu" class="absolute hidden top-10 left-auto right-0 m-0 z-10 w-40 bg-white rounded-lg divide-y divide-gray-400 shadow">
 										<ul class="py-1 text-sm text-left list-none">
-											<li><span class="dropdown-item block font-poppins font-normal py-2 px-4 text-gray-800 hover:bg-gray-200 active">This Month</span></li>
-											<li><span class="dropdown-item block font-poppins font-normal py-2 px-4 text-gray-800 hover:bg-gray-200">Last Month</span></li>
-											<li><span class="dropdown-item block font-poppins font-normal py-2 px-4 text-gray-800 hover:bg-gray-200">This Year</span></li>
+											<li><button type="button" class="dropdown-item w-full block font-poppins font-normal py-2 px-4 text-gray-800 hover:bg-gray-200 active">This Month</button></li>
+											<li><button type="button" class="dropdown-item w-full block font-poppins font-normal py-2 px-4 text-gray-800 hover:bg-gray-200">Last Month</button></li>
+											<li><button type="button" class="dropdown-item w-full block font-poppins font-normal py-2 px-4 text-gray-800 hover:bg-gray-200">This Year</button></li>
 										</ul>
 									</div>
 								</div>
@@ -73,7 +73,7 @@
 										</div>
 										<div class="relative mt-4 mr-auto ml-auto w-full h-[30px]"><canvas id="<%= `budget${i}` %>"></canvas></div>
 										<div class="font-poppins text-gray-800 font-sm px-2"><%= `\$${locals.expenses ? expenses.data[expenses.labels.indexOf(budget.category)] || '0.00' : '0.00'}` %>
-											<span class="text-gray-400"> of <%= Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(`${budget.amount.dollar}.${budget.amount.cent}`) %></span>
+											<span class="text-gray-400"> of <%= Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(`${budget.amount/100}.${budget.amount%100}`) %></span>
 										</div>
 									</div>
 								<% }) %> 
@@ -88,225 +88,30 @@
 			</div>
 		</main>
 	</div>
-
+	<%- include('../partials/dashboard-charts.ejs') %>
 	<script>
-		<% if (locals.expenses && expenses.labels.length) { %>
-			// setup block
-			const data = {
-				labels: <%- JSON.stringify(expenses.labels) %>,
-				datasets: [{
-					label: '$',
-					data: <%- JSON.stringify(expenses.data) %>,
-					borderWidth: 1,
-					backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-					hoverBorderColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-					hoverBorderWidth: 3,
-					hoverOffset: 10,
-					weight: 1,
-					radius: '70%',
-					cutout: '45%',
-					borderRadius: 5,
-					borderWidth: 2
-				}]
+		const dropdownItems = document.getElementsByClassName('dropdown-item')
+		const expenseDropdownBtn = document.getElementById('expense-dropdown-btn')
+		const expenseDropdownMenu = document.getElementById('expense-dropdown-menu')
+
+		expenseDropdownBtn.addEventListener('click', function(e) {
+			expenseDropdownMenu.classList.toggle('hidden')
+			e.stopPropagation()
+		})
+
+		window.addEventListener('click', function(e) {
+			if (!e.target.matches('.expense-dropdown-btn') && !expenseDropdownMenu.classList.contains('hidden')) {
+                expenseDropdownMenu.classList.add('hidden')
+            }
+		})
+		
+		Array.from(dropdownItems).forEach(item => {
+			if (item.classList.contains('active')) {
+				item.classList.replace('hover:bg-gray-200', 'bg-custom-purple-500')
+				item.classList.replace('text-gray-800', 'text-white')
 			}
-
-			// doughnutLabel plugin block
-			const doughtnutLabel = {
-				id: 'doughtnutLabel',
-				beforeDraw(chart, args, options) {
-					const { ctx, chartArea: { top, right, bottom, left, width, height }} = chart
-					ctx.save()
-					ctx.fillStyle = options.fontColor
-					ctx.font = 'bold 45px "Poppins"'
-					ctx.textAlign = 'center'
-					const text = new Date().toLocaleString('default', { month: 'short' })
-					ctx.fillText(text, width/2, 45 * 0.68 / 2 + height/2)
-				}
-			}
-
-			// outLabel plugin block
-			const outLabel = {
-				id: 'outLabel',
-				afterDraw(chart, args, options) {
-					const { ctx, chartArea: { top, right, bottom, left, width, height }} = chart
-					
-					function drawLine(ctx, x0, y0, xs, ys, width, color) {
-						ctx.beginPath()
-						ctx.moveTo(x0, y0)
-						xs.forEach((x, n) => {
-							ctx.lineTo(x, ys[n])
-						})
-						ctx.strokeStyle = color
-						ctx.lineWidth = width
-						ctx.stroke()
-						ctx.closePath()
-					}
-
-					chart.data.datasets.forEach((dataset, i) => {
-						chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
-							const angle = (datapoint.startAngle + datapoint.endAngle) / 2
-							const cosA = Math.cos(angle)
-							const sinA = Math.sin(angle)
-							const d = datapoint.outerRadius - 2
-							const x0 = datapoint.x + cosA * d
-							const y0 = datapoint.y + sinA * d
-							const x1 = datapoint.x + cosA * (d+30)
-							const y1 = datapoint.y + sinA * (d+30)
-							const color = dataset.backgroundColor[index]
-
-							drawLine(ctx, x0, y0, [x1, x1 <= width/2 ? x1-20 : x1+20], [y1, y1], 3, color)
-							
-							ctx.font = 'bold 12px "Poppins"'
-							ctx.textAlign = 'center'
-							ctx.fillStyle = color
-							ctx.textAlign = x1 <= width/2 ? 'right' : 'left'
-							chart.data.labels[index].split(' ').reverse().forEach((text, n) => {
-								ctx.fillText(text, x1 <= width/2 ? x1-20 : x1+20, y1-4-n*12)
-							})
-						})
-					})
-				}
-			}
-
-			// customCanvasBackgroundColor block
-			const customCanvasBackgroundColor = {
-				id: 'customCanvasBackgroundColor',
-				beforeDraw: (chart, args, options) => {
-					const {ctx} = chart
-					ctx.save()
-					ctx.globalCompositeOperation = 'destination-over'
-					
-					const grad = ctx.createLinearGradient(0, 0, chart.width, chart.height)
-					grad.addColorStop(0, '#ffffff')
-					grad.addColorStop(0.5, '#f7f7f7')
-					grad.addColorStop(1, '#ffffff')
-					
-					ctx.fillStyle = grad
-					ctx.fillRect(0, chart.height/2, chart.width, chart.height/2)
-					ctx.restore()
-				}
-			}
-
-			// config block
-			const config = {
-				plugins: [doughtnutLabel, outLabel, customCanvasBackgroundColor],
-				type: 'doughnut',
-				data,
-				options: {
-					plugins: {
-						legend: {
-							display: false
-						},
-						tooltip: {
-							callbacks: {
-								label: function(context) {
-									return `${context.dataset.label}${Number(context.formattedValue).toFixed(2)}`
-								}
-							}
-						},
-						doughtnutLabel: {
-							fontColor: 'black'
-						}
-					}
-				}
-			}
-
-			// render  block
-			const expenses = new Chart(
-				document.getElementById('expenses'),
-				config
-			)
-		<% } %>
-
-		let budgetCharts = []
-		const progressBar = {
-			id: 'progressBar',
-			beforeDatasetDraw: (chart, args, options) => {
-				const { ctx, chartArea: {top, bottom, left, right, width, height}, scales: {x, y} } = chart
-				ctx.save()
-
-				data.datasets[0].data.forEach((datapoint, index) =>  {
-					ctx.beginPath()
-					ctx.fillStyle = '#d4d6d5'
-					console.log(barHeight)
-					ctx.fillRect(left, y.getPixelForValue(index) - height/2, width, height)
-				})
-			}
-		}
-
-        <% if (locals.budgets) { %>
-		    <% budgets.forEach((budget, i) => { %>
-                budgetCharts.push(new Chart(document.getElementById(`budget${<%= i %>}`), {
-                    type: 'bar',
-                    data: {
-                        labels: <%- JSON.stringify(Array.of(budget.category)) %>,
-                        datasets: [{
-                            label: 'Amount Spent',
-                            data: <%- JSON.stringify(Array.of(locals.expenses ? expenses.data[expenses.labels.indexOf(budget.category)] || 0 : 0)) %>,
-                            backgroundColor: ['#00cfaa'],
-                            borderColor: ['#00cfaa'],
-                            borderWidth: 0,
-                            borderSkipped: false,
-                            borderRadius: 5,
-                            barPercentage: 1,
-                            categoryPercentage: 1
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        events: [],
-						indexAxis: 'y',
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                enabled: false
-                            }
-                        },
-						scales: {
-                            x: {
-                                min: 0,
-                                max: <%- JSON.stringify(parseFloat(`${budget.amount.dollar}.${budget.amount.cent}`)) %>,
-                                grid: {
-                                    display: false,
-                                    drawBorder: false
-                                },
-                                ticks: {
-                                    display: false
-                                },
-                                border: {
-                                    display: false
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    display: false,
-                                    drawBorder: false
-                                },
-                                ticks: {
-                                    display: false
-                                }
-                            }
-						}
-                    }
-                }))
-		    <% }) %>
-	    <% } %>
-
-		function expenseDropdownToggle() {
-				document.getElementById('expense-dropdown__menu').classList.toggle('hidden')
-			}
-
-			const dropdownItems = document.getElementsByClassName('dropdown-item')
-			Array.from(dropdownItems).forEach(item => {
-				if (item.classList.contains('active')) {
-					item.classList.replace('hover:bg-gray-200', 'bg-custom-purple-500')
-					item.classList.replace('text-gray-800', 'text-white')
-				}
-			})
-	  </script>
+		})
+	</script>
 </body>
 
 </html>
