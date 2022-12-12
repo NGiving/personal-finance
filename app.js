@@ -12,6 +12,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
 app.use('/css', express.static(path.join(__dirname, 'public/css')))
 app.use('/img', express.static(path.join(__dirname, 'public/img')))
+app.use('/js', express.static(path.join(__dirname, 'public/js')))
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/views'))
 
