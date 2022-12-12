@@ -30,7 +30,7 @@
                             <a href="/user/expenses" class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-custom-purple-600 hover:bg-custom-purple-700 focus:ring-custom-purple-500 ml-4 mr-2">
                                 Cancel
                             </a>
-                            <button type="button" form="expenseForm" action="#" class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-custom-purple-600 hover:bg-custom-purple-700 focus:ring-custom-purple-500 ml-2">
+                            <button id="submit-btn" type="button" class="font-poppins inline-flex whitespace-nowrap items-center border font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-sm leading-5 rounded-md border-transparent shadow-sm text-white bg-custom-purple-600 hover:bg-custom-purple-700 focus:ring-custom-purple-500 ml-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 -ml-1 mr-2">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
                                 </svg>
@@ -41,9 +41,69 @@
                     <div class="relative justify-end items-center h-5">
                         <!---->
                     </div>
+                    <div class="rounded-lg bg-white relative shadow">
+                        <div id="expenseForm" class="p-8">
+                            <div class="grid gap-y-6 grid-cols-2" style="column-gap: 2rem;">
+                                <div class="relative w-full text-left">
+                                    <label for="category" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
+                                        <div>
+                                            Category
+                                        </div>
+                                    </label>
+                                    <% console.log(locals.errorMEssage) %> 
+                                    <select name="category" id="category" class="rounded-md shadow-lg w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500">
+                                        <option value="" <% if (!locals.category) { %>selected<% } %> hidden  disabled>Select a category</option>
+                                        <option <% if (locals.category && category === 'Entertainment') { %>selected<% } %> value="Entertainment">Entertainment</option>
+                                        <option <% if (locals.category && category === 'Shopping') { %>selected<% } %> value="Shopping">Shopping</option>
+                                        <option <% if (locals.category && category === 'Health & Fitness') { %>selected<% } %> value="Health & Fitness">Health & Fitness</option>
+                                        <option <% if (locals.category && category === 'Food & Dining') { %>selected<% } %> value="Food & Dining">Food & Dining</option>
+                                        <option <% if (locals.category && category === 'Investments') { %>selected<% } %> value="Investments">Investments</option>
+                                        <option <% if (locals.category && category === 'Auto & Transport') { %>selected<% } %> value="Auto & Transport">Auto & Transport</option>
+                                        <option <% if (locals.category && category === 'Fee & Charges') { %>selected<% } %> value="Fee & Charges">Fee & Charges</option>
+                                        <option <% if (locals.category && category === 'Taxes') { %>selected<% } %> value="Taxes">Taxes</option>
+                                        <option <% if (locals.category && category === 'Business Services') { %>selected<% } %> value="Business Services">Business Services</option>
+                                        <option <% if (locals.category && category === 'Travel') { %>selected<% } %> value="Travel">Travel</option>
+                                        <option <% if (locals.category && category === 'Bills & Utilities') { %>selected<% } %> value="Bills & Utilities">Bills & Utilities</option>
+                                        <option <% if (locals.category && category === 'Gifts & Donations') { %>selected<% } %> value="Gifts & Donations">Gifts & Donations</option>
+                                        <option <% if (locals.category && category === 'Kids') { %>selected<% } %> value="Kids">Kids</option>
+                                        <option <% if (locals.category && category === 'Personal Care') { %>selected<% } %> value="Personal Care">Personal Care</option>
+                                        <option <% if (locals.category && category === 'Education') { %>selected<% } %> value="Education">Education</option>
+                                        <option <% if (locals.category && category === 'Miscellaneous') { %>selected<% } %> value="Miscellaneous">Miscellaneous</option>
+                                    </select>
+                                    <span class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage?.find(err => err['param'] === 'category')?.msg ?? ''%></span>
+                                </div>
+                                <div class="relative w-full text-left">
+                                    <label for="date" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
+                                        <div>
+                                            Date
+                                        </div>
+                                    </label>
+                                    <input type="date" name="date" id="date" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500" value="<%= new Date(locals.date).toISOString().split('T')[0] ?? null %>">
+                                </div>
+                                <div class="relative w-full text-left">
+                                    <label for="amount" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
+                                        <div>
+                                            Amount
+                                        </div>
+                                    </label>
+                                    <input type="text" inputmode="numeric" name="amount" id="amount" placeholder="<%= locals.amount ?? '$0.00' %>" class="rounded-md shadow w-full outline-none bg-white box-border border-0 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500">
+                                    <span class="block font-tahoma text-sm text-red-600 min-h-[18px] mt-1.5"><%= locals.errorMessage?.find(err => err['param'] === 'amount')?.msg ?? '' %></span>
+                                </div>
+                                <div class="relative w-full text-left">
+                                    <label for="description" class="font-poppins font-medium flex text-sm whitespace-nowrap text-gray-800 items-center">
+                                        <div>
+                                            Description
+                                        </div>
+                                    </label>
+                                    <textarea type="text" name="description" id="description" class="rounded-md shadow w-full outline-none bg-white box-border border-0 h-16 py-2 px-4 text-left font-poppins font-medium text-sm text-gray-500"><%= locals.description ?? '' %></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
+    <script src="/js/expense-edit.js" defer></script>
 </body>
 </html>

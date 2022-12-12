@@ -19,8 +19,8 @@ router.post('/expenses/create', userController.user_expenses_create_post);
 // Display User expense edit on GET
 router.get('/expenses/edit/:id', userController.user_expenses_edit_get)
 
-// Handle User expense edit on PUT
-router.put('/expenses/edit/:id', userController.user_expenses_edit_put)
+// Handle User expense edit on PATCH
+router.patch('/expenses/edit/:id', userController.user_expenses_edit_patch)
 
 // Handle User expense on DELETE
 router.delete('/expenses', userController.user_expenses_delete)

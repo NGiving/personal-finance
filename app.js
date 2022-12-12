@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 const flash = require('express-flash')
 const session = require('express-session')
-
+const { startJob } = require('./services/service')
 require('dotenv').config()
 
 // Initialization
@@ -42,6 +42,9 @@ const { checkAuthenticated } = require('./services/utils')
 app.all('*', checkAuthenticated)
 app.use('/', require('./routes/index'))
 app.use('/user', require('./routes/user'))
+
+// Cron Jobs
+startJob()
 
 // Listen to port 3000
 const port = process.env.PORT || 3000

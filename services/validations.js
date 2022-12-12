@@ -81,6 +81,30 @@ module.exports.expense = [
         return /(^\d+\.\d+$)|(\d+)|(^\d*\.\d+$)|(^\d+\.\d*$)/.test(value.replace('$', '').replaceAll(',', ''))
     })
     .withMessage('Please enter a valid numerical value')
+    .bail()
+    .isCurrency()
+    .withMessage('Invalid input')
+]
+
+module.exports.expenseEdit = [
+    check('category')
+    .exists({ checkFalsy: true })
+    .withMessage('Field is required'),
+
+    check('date')
+    .exists({ checkFalsy: true })
+    .withMessage('Field is required')
+    .bail()
+    .isDate()
+    .withMessage('Invalid date'),
+
+    check('amount')
+    .if((value, { req }) => value)
+    .custom((value, { req }) => {
+        return /(^\d+\.\d+$)|(\d+)|(^\d*\.\d+$)|(^\d+\.\d*$)/.test(value.replace('$', '').replaceAll(',', ''))
+    })
+    .withMessage('Please enter a valid numerical value')
+    .bail()
     .isCurrency()
     .withMessage('Invalid input')
 ]

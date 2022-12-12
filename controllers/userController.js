@@ -2,8 +2,8 @@ const utils = require('../services/utils');
 const validations = require('../services/validations');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
-const { default: mongoose } = require('mongoose');
-const db = require('../models')
+const db = require('../models');
+const { localsName } = require('ejs');
 
 module.exports.user_dashboard = async (req, res) => {
     const expenses = await utils.getUserMonthlyExpenses(req.user._id, 'current')
@@ -70,16 +70,50 @@ module.exports.user_expenses_create_post = [validations.expense, (req, res, next
     }
 }];
 
-module.exports.user_expenses_edit_get = (req, res) => {
-    res.render('users/expenses-edit', {
-        user: req.user,
-        page_name: 'expense-edit'
-    })
-}
+module.exports.user_expenses_edit_get = async (req, res) => {
+    try {
+        const expId = req.params.id
+        const exp = await db.Expense.findById(expId)
+        const { category, date, amount, description } = exp
+        res.render('users/expenses-edit', {
+            user: req.user,
+            page_name: 'expense-edit',
+            category,
+            date,
+            amount: Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(`${amount/100}.${amount%100}`),
+            description
+        })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({
+            error: 'Some error has occurred'
+        })
+    }
+};
 
-module.exports.user_expenses_edit_put = (req, res) => {
-    
-}
+module.exports.user_expenses_edit_patch = [validations.expenseEdit, (req, res, next) => {
+    const { category, date, amount, description } = req.body
+    const errors = validationResult(req).array()
+    if (errors.length) {
+        console.log(errors)
+        
+        res.status(400)
+        res.render('users/expenses-edit', {
+            user: req.user,
+            page_name: 'expense-edit',
+            category,
+            amount,
+            date,
+            description,
+            errorMessage: errors
+        })
+        res.locals.errorMessage = errors
+    } else {
+        next()
+    }
+}, (req, res) => {
+
+}];
 
 module.exports.user_expenses_delete = async (req, res) => {
     const expId = req.body.expId.trim()

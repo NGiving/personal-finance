@@ -54,7 +54,7 @@
                                     <tbody>
                                         <% expenses.forEach((exp, n) => { %>
                                         <tr>
-                                            <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= Intl.DateTimeFormat('en-CA').format(exp.date) %></td>
+                                            <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= new Date(exp.date).toISOString().split('T')[0] %></td>
                                             <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= exp.category %></td>
                                             <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= exp.description || '-' %></td>
                                             <td class="px-6 py-4 text-left font-medium text-gray-500 whitespace-nowrap font-poppins text-sm"><%= Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(`${exp.amount/100}.${exp.amount%100}`) %></td>
